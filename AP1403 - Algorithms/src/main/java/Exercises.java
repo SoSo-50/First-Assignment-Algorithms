@@ -9,8 +9,15 @@ public class Exercises {
         note: you should return the indices in ascending order and every array's solution is unique
     */
     public int[] productIndices(int[] values, int target) {
-        // todo
-        return null;
+        int[] result = new int[values.length];
+        for (int i = 0; i < values.length; i++) {
+            for (int j = i + 1; j < values.length; j++) {
+                if (values[i] * values[j] == target) {
+                    return new int[]{i, j};
+                }
+            }
+        }
+        return result;
     }
 
     /*
@@ -25,9 +32,38 @@ public class Exercises {
         so you should walk in that matrix in a curl and then add the numbers in order you've seen them in a 1D array
     */
     public int[] spiralTraversal(int[][] values, int rows, int cols) {
-        // todo
-        return null;
-    }
+                int[] result = new int[rows * cols];
+
+                int top = 0, bottom = rows - 1, left = 0, right = cols - 1, index = 0;
+
+                while (top <= bottom && left <= right) {
+                    for (int i = left; i <= right; i++) {
+                        result[index++] = values[top][i];
+                    }
+                    top++;
+
+                    for (int i = top; i <= bottom; i++) {
+                        result[index++] = values[i][right];
+                    }
+                    right--;
+
+                    if (top <= bottom) {
+                        for (int i = right; i >= left; i--) {
+                            result[index++] = values[bottom][i];
+                        }
+                        bottom--;
+                    }
+
+                    if (left <= right) {
+                        for (int i = bottom; i >= top; i--) {
+                            result[index++] = values[i][left];
+                        }
+                        left++;
+                    }
+                }
+
+                return result;
+            }
 
     /*
         integer partitioning is a combinatorics problem in discreet maths
@@ -54,8 +90,34 @@ public class Exercises {
         if you're familiar with lists and arraylists, you can also edit method's body to use them instead of array
     */
     public int[][] intPartitions(int n) {
-        // todo
-        return null;
+        int count = countPartitions(n, n);
+        int[][] partitions = new int[count][];
+        int[] temp = new int[n];
+        fillPartitions(n, n, temp, 0, partitions, new int[]{0});
+        return partitions;
+    }
+
+    private static int countPartitions(int n, int max) {
+        if (n == 0) return 1;
+        int count = 0;
+        for (int i = Math.min(n, max); i >= 1; i--) {
+            count += countPartitions(n - i, i);
+        }
+        return count;
+    }
+
+    private static void fillPartitions(int n, int max, int[] temp, int index, int[][] partitions, int[] pos) {
+        if (n == 0) {
+            partitions[pos[0]] = new int[index];
+            System.arraycopy(temp, 0, partitions[pos[0]], 0, index);
+            pos[0]++; 
+            return;
+        }
+
+        for (int i = Math.min(n, max); i >= 1; i--) {
+            temp[index] = i;
+            fillPartitions(n - i, i, temp, index + 1, partitions, pos);
+        }
     }
 
     public static void main(String[] args) {
